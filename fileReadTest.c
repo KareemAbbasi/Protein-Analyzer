@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 char fileChars[200][50];
 
@@ -33,10 +34,17 @@ int openFile(char fileName[], char fileLines[][10]){
 
 
 int main(){
-    char fileLines[10][10];
-    openFile("C:\\Users\\owner\\Desktop\\targil1\\HI", fileLines);
-    for (int i=0; i< sizeof(fileLines)/ sizeof(fileLines[0]); ++i){
-        printf("%s", fileLines[i]);
-    }
+//    char fileLines[10][10];
+//    openFile("C:\\Users\\owner\\Desktop\\targil1\\HI", fileLines);
+//    for (int i=0; i< sizeof(fileLines)/ sizeof(fileLines[0]); ++i){
+//        printf("%s", fileLines[i]);
+// }
+    char *hi, *stop;
+    float h;
+
+    hi = "-412";
+    h = strtof(hi, &stop);
+
+    printf("%f", h);
 
 }

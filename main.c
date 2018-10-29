@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 float atoms[20000][3];
 float arraySize = sizeof(atoms)/ sizeof(atoms[0]);
@@ -29,13 +30,30 @@ int readFile(char fileName[], char *fileLines[]){
 }
 
 
-int findAtomCoordinates(char fileLines[][80], char atoms){
+int findAtomCoordinates(char fileLines[][80], char atoms[][3]){
+
+    int atomCount = 0;
     for (int i = 0; i < sizeof(fileLines)/ sizeof(fileLines[0]); ++i){
         if (startsWith(fileLines[i], "ATOM")){
-            char xCoordinate[7];
-            for (int j = 31; j< 39; ++j){
 
+            atomCount ++;
+            char xCoordinate[7];
+            char yCoordinate[7];
+            char zCoordinate[7];
+
+            for (int j = 31; j< 39; ++j){
+                xCoordinate[j%31] = fileLines[i][j];
             }
+
+            for (int j = 39; j<47; ++j){
+                yCoordinate[j%39] = fileLines[i][j];
+            }
+
+            for (int j = 47; j < 55; ++j){
+                zCoordinate[j%47] = fileLines[i][j];
+            }
+
+            atoms[atomCount][0] = (float)xCoordinate;
         }
     }
 }
