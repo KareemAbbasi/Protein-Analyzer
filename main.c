@@ -4,9 +4,6 @@
 #include <stdlib.h>
 
 
-float centerGravity[3];
-
-
 int startsWith(char *a, char *b){
     if (strncmp(a,b, sizeof(b))== 0) return 1;
     return 0;
@@ -14,7 +11,7 @@ int startsWith(char *a, char *b){
 
 
 
-int readFile(char fileName[], char fileLines[][80]){
+int readFile(char fileName[], char fileLines[][90]){
     int line = 0;
     FILE *file;
     file = fopen(fileName, "r");
@@ -30,7 +27,7 @@ int readFile(char fileName[], char fileLines[][80]){
 }
 
 
-int findAtomCoordinates(char fileLines[][80], float atomsArray[][3]){
+int findAtomCoordinates(char fileLines[][90], float atomsArray[20000][3]){
     int atomCount=0;
     for (int i = 0; i < 20000; ++i){ //TODO change the sizeof
         if (startsWith(fileLines[i], "ATOM")){
@@ -47,16 +44,10 @@ int findAtomCoordinates(char fileLines[][80], float atomsArray[][3]){
             strncpy(yCoordinate, fileLines[i]+39, 7);
             strncpy(zCoordinate, fileLines[i]+47, 7);
 
-//            atomsArray[i][0] = strtof(xCoordinate, NULL);
-//            atomsArray[i][1] = strtof(yCoordinate, NULL);
-//            atomsArray[i][2] = strtof(zCoordinate, NULL);
 
             atomsArray[atomCount][0] = strtof(xCoordinate, NULL);
             atomsArray[atomCount][1] = strtof(yCoordinate, NULL);
             atomsArray[atomCount][2] = strtof(zCoordinate, NULL);
-
-
-
 
             atomCount++;
         }
@@ -66,23 +57,24 @@ int findAtomCoordinates(char fileLines[][80], float atomsArray[][3]){
 
 
 
-//float findAverageCoordinate(int coordinate) {
-//    float sum = 0;
-//    for (int i = 0; i < arraySize; ++i){
-//        sum += atoms[i][coordinate];
-//    }
-//
-//    float coordinateAvegare = sum/arraySize;
-//
-//    return coordinateAvegare;
-//}
+float findAverageCoordinate(int coordinate, float atomsArray[20000][3], int atomCount) {
+    float sum = 0;
+    for (int i = 0; i < atomCount; ++i){
+        sum += atomsArray[i][coordinate];
+    }
 
-//int findCenterGravity(){
-//    for (int i = 0; i < 3; ++i){
-//        centerGravity[i] = findAverageCoordinate(i);
-//    }
-//    return 0;
-//}
+    float ff =  sum/atomCount; //TODO change the name
+
+    return ff;
+
+
+}
+
+int findCenterGravity(float centerGravity[3], float atomsArray[20000][3], int atomCount){
+    for (int i = 0; i < 3; ++i){
+        centerGravity[i] = findAverageCoordinate(i, atomsArray, atomCount);
+    }
+}
 
 float distanceTwoPoint(float p1[3], float p2[3]){
     float sum = 0;
@@ -94,32 +86,55 @@ float distanceTwoPoint(float p1[3], float p2[3]){
     return dist;
 }
 
-//float findRG(){
-//    float sum = 0;
-//
-//    for (int i=0; i<arraySize; ++i){
-//        sum += pow(distanceTwoPoint(centerGravity, atoms[i]),2);
-//    }
-//
-//    return sqrtf(sum/arraySize);
-//}
+float findRG(int atomCount, float centerGravity[3], float atomsArray[20000][3]){
+    float sum = 0;
 
+    for (int i=0; i<atomCount; ++i){
+        sum += pow(distanceTwoPoint(centerGravity, atomsArray[i]),2);
+    }
+
+    return sqrtf(sum/atomCount);
+}
+
+float findDmax(int atomCount, float atomsArray[20000][3]){
+    float Dmax = 0;
+    for (int i = 0; i < atomCount; ++i){
+        for (int j = i; j < atomCount; ++j){
+            float dist = distanceTwoPoint(atomsArray[i], atomsArray[j]);
+            if (dist > Dmax){
+                Dmax = dist;
+            }
+        }
+    }
+    return Dmax;
+}
 
 
 
 int main() {
     char *fileName;
-    fileName = "C:\\Users\\owner\\Desktop\\targil1\\2g4j.pdb";
-    char fileLines[20000][80];
-    float atomC[20000][3];
+    fileName = "C:\\Users\\owner\\Desktop\\targil1\\test2";
+    char fileLines[20000][90];
+    float atomC[20000][3]; //TODO change name
+    float centerGravity[3];
+    float RG;
+    float Dmax;
     readFile(fileName, fileLines);
     int atomsNum = findAtomCoordinates(fileLines, atomC);
+
+    findCenterGravity(centerGravity, atomC, atomsNum);
+
+    RG = findRG(atomsNum, centerGravity, atomC);
+    Dmax = findDmax(atomsNum,atomC);
 
 //    for (int i=0; i<12; ++i){
 //        printf("%f, %f, %f\n", atomC[i][0], atomC[i][1], atomC[i][2]);
 //    }
 
-    printf("There are %d atoms in %s", atomsNum, fileName);
+    printf("There are %d atoms in %s\n", atomsNum, fileName);
+    printf("Cg = %f %f %f\n", centerGravity[0], centerGravity[1], centerGravity[2]);
+    printf("Rg = %f\n", RG);
+    printf("Dmax = %f\n", Dmax);
 
 
 
