@@ -5,7 +5,7 @@
 
 
 int startsWith(char *a, char *b){
-    if (strncmp(a,b, 4)== 0) return 1;
+    if (strncmp(a,b, 4)== 0) return 1; //TODO change the 4
     return 0;
 }
 
@@ -24,7 +24,6 @@ int readFile(char fileName[], char fileLines[][90]){
                 break;
             }
         }
-
     }
     fclose(file);
     return 0;
@@ -137,7 +136,7 @@ int main(int argc, char* argv[]) {
             RG = findRG(atomsNum, centerGravity, atomC);
             Dmax = findDmax(atomsNum, atomC);
 
-            printf("There are %d atoms in %s\n", atomsNum, fileName);
+            printf("PDB file %s, %d atoms were read\n", fileName, atomsNum);
             printf("Cg = %f %f %f\n", centerGravity[0], centerGravity[1], centerGravity[2]);
             printf("Rg = %f\n", RG);
             printf("Dmax = %f\n", Dmax);
