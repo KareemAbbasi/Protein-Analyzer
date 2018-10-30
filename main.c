@@ -111,31 +111,29 @@ float findDmax(int atomCount, float atomsArray[20000][3]){
 
 
 
-int main() {
-    char *fileName;
-    fileName = "C:\\Users\\owner\\Desktop\\targil1\\test2";
-    char fileLines[20000][90];
-    float atomC[20000][3]; //TODO change name
-    float centerGravity[3];
-    float RG;
-    float Dmax;
-    readFile(fileName, fileLines);
-    int atomsNum = findAtomCoordinates(fileLines, atomC);
+int main(int argc, char* argv[]) {
+//    if (argc > 1) {
+//        for (int i = 1; i < argc; ++i) {
+//
+            char *fileName;
+            fileName = "test2";
+            char fileLines[20000][90];
+            float atomC[20000][3]; //TODO change name
+            float centerGravity[3];
+            float RG;
+            float Dmax;
+            readFile(fileName, fileLines);
+            int atomsNum = findAtomCoordinates(fileLines, atomC);
 
-    findCenterGravity(centerGravity, atomC, atomsNum);
+            findCenterGravity(centerGravity, atomC, atomsNum);
 
-    RG = findRG(atomsNum, centerGravity, atomC);
-    Dmax = findDmax(atomsNum,atomC);
+            RG = findRG(atomsNum, centerGravity, atomC);
+            Dmax = findDmax(atomsNum, atomC);
 
-//    for (int i=0; i<12; ++i){
-//        printf("%f, %f, %f\n", atomC[i][0], atomC[i][1], atomC[i][2]);
+            printf("There are %d atoms in %s\n", atomsNum, fileName);
+            printf("Cg = %f %f %f\n", centerGravity[0], centerGravity[1], centerGravity[2]);
+            printf("Rg = %f\n", RG);
+            printf("Dmax = %f\n", Dmax);
+//        }
 //    }
-
-    printf("There are %d atoms in %s\n", atomsNum, fileName);
-    printf("Cg = %f %f %f\n", centerGravity[0], centerGravity[1], centerGravity[2]);
-    printf("Rg = %f\n", RG);
-    printf("Dmax = %f\n", Dmax);
-
-
-
 }
