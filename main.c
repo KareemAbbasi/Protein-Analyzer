@@ -5,7 +5,7 @@
 
 
 int startsWith(char *a, char *b){
-    if (strncmp(a,b, sizeof(b))== 0) return 1;
+    if (strncmp(a,b, 4)== 0) return 1;
     return 0;
 }
 
@@ -18,12 +18,16 @@ int readFile(char fileName[], char fileLines[][90]){
 
 
     if (file){
-        while(fgets(fileLines[line], 80, file)){ //TODO change the 80
+        while(fgets(fileLines[line], 90, file)){ //TODO change the 80;
             line++;
+            if (line >= 20000){ //TODO change the 20000;
+                break;
+            }
         }
-    }
 
+    }
     fclose(file);
+    return 0;
 }
 
 
@@ -36,6 +40,8 @@ int findAtomCoordinates(char fileLines[][90], float atomsArray[20000][3]){
             char yCoordinate[8];
             char zCoordinate[8];
 
+            char *end;
+
             memset(xCoordinate, '\0', sizeof(xCoordinate));
             memset(yCoordinate, '\0', sizeof(yCoordinate));
             memset(zCoordinate, '\0', sizeof(zCoordinate));
@@ -45,9 +51,9 @@ int findAtomCoordinates(char fileLines[][90], float atomsArray[20000][3]){
             strncpy(zCoordinate, fileLines[i]+47, 7);
 
 
-            atomsArray[atomCount][0] = strtof(xCoordinate, NULL);
-            atomsArray[atomCount][1] = strtof(yCoordinate, NULL);
-            atomsArray[atomCount][2] = strtof(zCoordinate, NULL);
+            atomsArray[atomCount][0] = strtof(xCoordinate, &end);
+            atomsArray[atomCount][1] = strtof(yCoordinate, &end);
+            atomsArray[atomCount][2] = strtof(zCoordinate, &end);
 
             atomCount++;
         }
@@ -74,6 +80,7 @@ int findCenterGravity(float centerGravity[3], float atomsArray[20000][3], int at
     for (int i = 0; i < 3; ++i){
         centerGravity[i] = findAverageCoordinate(i, atomsArray, atomCount);
     }
+    return 0;
 }
 
 float distanceTwoPoint(float p1[3], float p2[3]){
@@ -112,14 +119,14 @@ float findDmax(int atomCount, float atomsArray[20000][3]){
 
 
 int main(int argc, char* argv[]) {
-//    if (argc > 1) {
-//        for (int i = 1; i < argc; ++i) {
-//
+    if (argc > 1) {
+        for (int i = 1; i < argc; ++i) {
+
             char *fileName;
-            fileName = "test2";
-            char fileLines[20000][90];
-            float atomC[20000][3]; //TODO change name
-            float centerGravity[3];
+            fileName = argv[i];
+            char fileLines[20000][90] = {{"\0"}};
+            float atomC[20000][3] = {{0}}; //TODO change name
+            float centerGravity[3] = {0};
             float RG;
             float Dmax;
             readFile(fileName, fileLines);
@@ -134,6 +141,6 @@ int main(int argc, char* argv[]) {
             printf("Cg = %f %f %f\n", centerGravity[0], centerGravity[1], centerGravity[2]);
             printf("Rg = %f\n", RG);
             printf("Dmax = %f\n", Dmax);
-//        }
-//    }
+        }
+    }
 }
