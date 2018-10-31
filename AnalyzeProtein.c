@@ -146,7 +146,7 @@ float distanceTwoPoint(float p1[NUM_OF_COORDINATES], float p2[NUM_OF_COORDINATES
     float sum = 0;
     for (int i = 0; i < 3; ++i)
     {
-        sum += pow((p1[i] - p2[i]),2);
+        sum += pow((p1[i] - p2[i]), 2);
     }
 
     float dist = sqrtf(sum);
@@ -167,7 +167,7 @@ float findRG(int atomCount, float centerGravity[NUM_OF_COORDINATES], float atoms
 
     for (int i = 0; i < atomCount; ++i)
     {
-        sum += pow(distanceTwoPoint(centerGravity, atomsArray[i]),2);
+        sum += pow(distanceTwoPoint(centerGravity, atomsArray[i]), 2);
     }
 
     return sqrtf(sum / atomCount);
